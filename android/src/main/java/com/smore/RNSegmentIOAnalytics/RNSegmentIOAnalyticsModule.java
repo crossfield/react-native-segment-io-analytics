@@ -37,11 +37,12 @@ public class RNSegmentIOAnalyticsModule extends ReactContextBaseJavaModule {
    https://segment.com/docs/libraries/android/#identify
    */
   @ReactMethod
-  public void setup(String writeKey, Integer flushAt, Boolean shouldUseLocationServices) {
+  public void setup(String writeKey, Integer flushAt, Boolean shouldUseLocationServices, Boolean debug) {
     if (!initialized) {
       Context context = getReactApplicationContext().getApplicationContext();
       Builder builder = new Analytics.Builder(context, writeKey);
       builder.flushQueueSize(flushAt);
+      mDebug = debug;
 
       if (mDebug) {
         builder.logLevel(Analytics.LogLevel.DEBUG);
