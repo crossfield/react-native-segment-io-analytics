@@ -1,21 +1,24 @@
 package com.smore.RNSegmentIOAnalytics;
 
+import android.content.Context;
+import android.util.Log;
+
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.ReadableMapKeySetIterator;
-
 import com.facebook.react.bridge.ReadableType;
 import com.segment.analytics.Analytics;
 import com.segment.analytics.Analytics.Builder;
+import com.segment.analytics.Options;
 import com.segment.analytics.Properties;
 import com.segment.analytics.Traits;
-import com.segment.analytics.Options;
-import android.util.Log;
-import android.content.Context;
 
 public class RNSegmentIOAnalyticsModule extends ReactContextBaseJavaModule {
+  private static final String KEY_FLUSH_AT = "flushAt";
+  private static final String KEY_DEBUG = "debug";
+
   private static boolean initialized = false;
   private boolean mEnabled = true;
   private boolean mDebug = false;
@@ -37,12 +40,14 @@ public class RNSegmentIOAnalyticsModule extends ReactContextBaseJavaModule {
    https://segment.com/docs/libraries/android/#identify
    */
   @ReactMethod
-  public void setup(String writeKey, Integer flushAt, Boolean shouldUseLocationServices, Boolean debug) {
+  public void setup(String writeKey, ReadableMap options) {
     if (!initialized) {
       Context context = getReactApplicationContext().getApplicationContext();
       Builder builder = new Analytics.Builder(context, writeKey);
-      builder.flushQueueSize(flushAt);
-      mDebug = debug;
+      if (options.hasKey(KEY_FLUSH_AT)) {
+        builder.flushQueueSize(options.getInt(KEY_FLUSH_AT));
+      }
+      mDebug = options.hasKey(KEY_DEBUG) && options.getBoolean(KEY_DEBUG);
 
       if (mDebug) {
         builder.logLevel(Analytics.LogLevel.DEBUG);
