@@ -21,15 +21,21 @@ var RNSegmentIOAnalytics = {
      *
      * @param configKey https://segment.com/docs/libraries/ios/#configuration or https://segment.com/docs/libraries/android/#customizing-the-client
      * @param flushAt https://segment.com/docs/libraries/ios/#flushing or https://segment.com/docs/libraries/android/#customizing-the-client
+     * @param trackApplicationLifecycleEvents https://segment.com/docs/sources/mobile/ios/#application-lifecycle-tracking or https://segment.com/docs/sources/mobile/android/#track
+     * @param recordScreenViews https://segment.com/docs/sources/mobile/ios/#automatic-screen-tracking or https://segment.com/docs/sources/mobile/ios/#automatic-screen-tracking
      * @param shouldUseLocationServices https://segment.com/docs/libraries/ios/#location-services
      */
     setup: function (configKey, {
         flushAt = 20,
+        trackApplicationLifecycleEvents = false,
+        recordScreenViews = false,
         shouldUseLocationServices = false,
         debug = false
     } = {}) {
         NativeRNSegmentIOAnalytics.setup(configKey, {
             flushAt,
+            trackApplicationLifecycleEvents,
+            recordScreenViews,
             shouldUseLocationServices,
             debug
         });

@@ -17,6 +17,8 @@ import com.segment.analytics.Traits;
 
 public class RNSegmentIOAnalyticsModule extends ReactContextBaseJavaModule {
   private static final String KEY_FLUSH_AT = "flushAt";
+  private static final String KEY_TRACK_APPLICATION_LIFECYCLE_EVENTS = "trackApplicationLifecycleEvents";
+  private static final String KEY_RECORD_SCREEN_VIEWS = "recordScreenViews";
   private static final String KEY_DEBUG = "debug";
 
   private static boolean initialized = false;
@@ -46,6 +48,12 @@ public class RNSegmentIOAnalyticsModule extends ReactContextBaseJavaModule {
       Builder builder = new Analytics.Builder(context, writeKey);
       if (options.hasKey(KEY_FLUSH_AT)) {
         builder.flushQueueSize(options.getInt(KEY_FLUSH_AT));
+      }
+      if (options.hasKey(KEY_TRACK_APPLICATION_LIFECYCLE_EVENTS) && options.getBoolean(KEY_TRACK_APPLICATION_LIFECYCLE_EVENTS)) {
+        builder.trackApplicationLifecycleEvents();
+      }
+      if (options.hasKey(KEY_RECORD_SCREEN_VIEWS) && options.getBoolean(KEY_RECORD_SCREEN_VIEWS)) {
+        builder.recordScreenViews();
       }
       mDebug = options.hasKey(KEY_DEBUG) && options.getBoolean(KEY_DEBUG);
 

@@ -21,6 +21,14 @@ RCT_EXPORT_METHOD(setup:(NSString*)configKey options:(NSDictionary *)options)
     if (flushAtObject) {
         configuration.flushAt = [RCTConvert NSUInteger:flushAtObject];
     }
+    id trackApplicationLifecycleEventsObject = [options objectForKey:@"trackApplicationLifecycleEvents"];
+    if (trackApplicationLifecycleEventsObject) {
+        configuration.trackApplicationLifecycleEvents = [RCTConvert BOOL:trackApplicationLifecycleEventsObject];
+    }
+    id recordScreenViewsObject = [options objectForKey:@"recordScreenViews"];
+    if (recordScreenViewsObject) {
+        configuration.recordScreenViews = [RCTConvert BOOL:recordScreenViewsObject];
+    }
     id shouldUseLocationServicesObject = [options objectForKey:@"shouldUseLocationServices"];
     if (shouldUseLocationServicesObject) {
         configuration.shouldUseLocationServices = [RCTConvert BOOL:shouldUseLocationServicesObject];
