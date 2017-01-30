@@ -22,6 +22,7 @@ public class RNSegmentIOAnalyticsModule extends ReactContextBaseJavaModule {
   private static final String KEY_DEBUG = "debug";
 
   private static boolean initialized = false;
+  private Hooks mHooks;
   private boolean mEnabled = true;
   private boolean mDebug = false;
 
@@ -34,8 +35,23 @@ public class RNSegmentIOAnalyticsModule extends ReactContextBaseJavaModule {
     Log.d("RNSegmentIOAnalytics", message);
   }
 
-  public RNSegmentIOAnalyticsModule(ReactApplicationContext reactContext) {
+  public interface Hooks {
+    /*
+     Called after setting up the builder but before calling build() and
+     setting the singleton instance
+     */
+    void onSetupBuilderFinished(Builder builder);
+
+    /*
+     Called once setup work is finished. At this time the singleton instance is set.
+     */
+    void onSetupFinished();
+  }
+
+  public RNSegmentIOAnalyticsModule(ReactApplicationContext reactContext, Hooks hooks) {
     super(reactContext);
+
+    mHooks = hooks;
   }
 
   /*
@@ -61,9 +77,16 @@ public class RNSegmentIOAnalyticsModule extends ReactContextBaseJavaModule {
         builder.logLevel(Analytics.LogLevel.DEBUG);
       }
 
+      if (mHooks != null) {
+        mHooks.onSetupBuilderFinished(builder);
+      }
+
       Analytics analytics = builder.build();
       Analytics.setSingletonInstance(analytics);
       initialized = true;
+      if (mHooks != null) {
+        mHooks.onSetupFinished();
+      }
     } else {
       log("Segment Analytics already initialized. Refusing to re-initialize.");
     }
