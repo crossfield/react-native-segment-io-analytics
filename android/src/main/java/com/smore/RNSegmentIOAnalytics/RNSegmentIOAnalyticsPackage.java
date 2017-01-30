@@ -1,18 +1,29 @@
 package com.smore.RNSegmentIOAnalytics;
 
-import com.smore.RNSegmentIOAnalytics.RNSegmentIOAnalyticsModule;
+import android.util.Log;
+
 import com.facebook.react.ReactPackage;
+import com.facebook.react.bridge.JavaScriptModule;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
-import com.facebook.react.bridge.JavaScriptModule;
 import com.facebook.react.uimanager.ViewManager;
 
-import android.util.Log;
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class RNSegmentIOAnalyticsPackage implements ReactPackage {
+
+  private RNSegmentIOAnalyticsModule.Hooks mHooks;
+
+  public RNSegmentIOAnalyticsPackage() {
+    this(null);
+  }
+
+  public RNSegmentIOAnalyticsPackage(RNSegmentIOAnalyticsModule.Hooks hooks) {
+    mHooks = hooks;
+  }
+
   @Override
   public List<NativeModule> createNativeModules(
                               ReactApplicationContext reactContext) {
@@ -21,7 +32,7 @@ public class RNSegmentIOAnalyticsPackage implements ReactPackage {
 
     List<NativeModule> modules = new ArrayList<>();
 
-    modules.add(new RNSegmentIOAnalyticsModule(reactContext));
+    modules.add(new RNSegmentIOAnalyticsModule(reactContext, mHooks));
 
     return modules;
   }
