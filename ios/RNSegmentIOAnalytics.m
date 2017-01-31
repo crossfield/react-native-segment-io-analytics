@@ -12,6 +12,26 @@
 
 @implementation RNSegmentIOAnalytics
 
+static OnSetupConfigFinishedBlock gOnSetupConfigFinishedBlock = nil;
+static OnSetupFinishedBlock gOnSetupFinishedBlock = nil;
+
++ (OnSetupConfigFinishedBlock)onSetupConfigFinishedBlock {
+    return gOnSetupConfigFinishedBlock;
+}
+
++ (void)setOnSetupConfigFinishedBlock:(OnSetupConfigFinishedBlock)block {
+    gOnSetupConfigFinishedBlock = [block copy];
+}
+
++ (OnSetupFinishedBlock)onSetupFinishedBlock {
+    return gOnSetupFinishedBlock;
+}
+
++ (void)setOnSetupFinishedBlock:(OnSetupFinishedBlock)block {
+    gOnSetupFinishedBlock = [block copy];
+}
+
+
 RCT_EXPORT_MODULE()
 
 RCT_EXPORT_METHOD(setup:(NSString*)configKey options:(NSDictionary *)options)
@@ -33,10 +53,19 @@ RCT_EXPORT_METHOD(setup:(NSString*)configKey options:(NSDictionary *)options)
     if (shouldUseLocationServicesObject) {
         configuration.shouldUseLocationServices = [RCTConvert BOOL:shouldUseLocationServicesObject];
     }
+
+    if (gOnSetupConfigFinishedBlock) {
+        gOnSetupConfigFinishedBlock(configuration);
+    }
+
     [SEGAnalytics setupWithConfiguration:configuration];
     id debugObject = [options objectForKey:@"debug"];
     if (debugObject) {
         [SEGAnalytics debug:[RCTConvert BOOL:debugObject]];
+    }
+
+    if (gOnSetupFinishedBlock) {
+        gOnSetupFinishedBlock();
     }
 }
 
